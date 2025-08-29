@@ -1,0 +1,241 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #f9f6f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family:'Oswald',sans-serif;
+
+}
+
+.login{
+    width: 500px;
+    height: 600px;
+    margin-top: 50px;
+    background-color: white;
+    border: 2px solid rgba(0, 0, 0, 0.679);
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.close{
+    position: absolute;
+    top: -18px;
+    right: 10px;
+    font-size: 45px;
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.537);
+}
+
+.close:hover{
+    color: black;
+}
+
+.ocultar{
+    display: none;
+}
+
+.container{
+    width: 42px;
+}
+
+h2{
+    margin-bottom: 0px;
+}
+
+.separador{
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: -17px;
+}
+
+hr{
+    background-color: black;
+    width: 160px;
+    height: 1.9px;
+    border: 0;
+    margin: auto 3px;
+    border-radius: 1px;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    -ms-border-radius: 1px;
+    -o-border-radius: 1px;
+}
+
+.separador p{
+    margin: 0;
+    margin-top: -3px;
+}
+
+.bienvenido{
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+}
+
+.bienvenido p{
+    width: 350px;
+}
+
+form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0px;
+}
+
+input{
+    width: 300px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    padding-left: 8px;
+}
+
+input:hover{
+    border: 2px solid #ac704a;
+}
+
+button{
+    width: 200px;
+    height: 32px;
+    border-radius: 9px;
+    color: #f9f6f2;
+    background-color: #ac704a;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    -ms-border-radius: 9px;
+    -o-border-radius: 9px;
+    border: 1px solid black;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+    -webkit-transition: background-color 0.5s ease;
+    -moz-transition: background-color 0.5s ease;
+    -ms-transition: background-color 0.5s ease;
+    -o-transition: background-color 0.5s ease;
+}
+
+button:hover{
+    background-color: #764426;
+}
+
+.texto-registrate{
+    width: 300px;
+    height: 100px;
+    border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -ms-border-radius: 12px;
+    -o-border-radius: 12px;
+    background-color: #f9f6f2;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.texto-registrate p{
+    margin: 1px;
+}
+
+.texto-registrate a{
+    font-size: 15px;
+    color: black;
+}
+
+
+.register{
+    width: 500px;
+    height: 675px;
+    margin-top: 10px;
+    background-color: white;
+    border: 2px solid rgba(0, 0, 0, 0.679);
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container-volver{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -18px;
+    left: 10px;
+    text-align: center;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.volver{
+    margin-top: 10px;
+    font-size: 30px;
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.537);
+}
+
+.registro{
+    margin-top: 30px;
+    width: 350px;
+}
+
+.container-volver h2,.h2{
+    color: rgba(0, 0, 0, 0.537);
+    font-size: 18px;
+    font-family:Roboto;
+    text-decoration:none ;
+
+}
+
+.container-volver:hover{
+    .volver,h2{
+        color: black;
+    }
+}
+
+.completar-datos{
+    width: 500px;
+    height: 600px;
+    margin-top: 50px;
+    background-color: white;
+    border: 2px solid rgba(0, 0, 0, 0.679);
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+
+}

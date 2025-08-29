@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename= '/CSS/home.css' )}}"
+    />
+    <title>TuCasaOnline</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link
+      rel="shortcut icon"
+      href="{{url_for('static',filename='Imagenes/logof.png')}}"
+      type="image/x-icon"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter&family=Lora&family=Poppins&family=Playfair+Display&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Bebas+Neue&family=Oswald:wght@200..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header" id="inicio">
+      <div class="logo"></div>
+      <div class="menu-nav">
+        <nav>
+          <ul>
+            <li><a href="" class="menu">Comprar</a></li>
+            <li><a href="" class="menu">Alquilar</a></li>
+            <li><a href="" class="menu">Servicios</a></li>
+            <li><a href="" class="menu">Buscar Inmobiliarias</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="header-container">
+        {% if session.usuario %} {% if usuario_incompleto %}
+        <a id="completar" href="{{ url_for('completar_datos') }}"
+          >Completar Datos</a
+        >
+        <a href="{{ url_for('completar_datos') }}"
+          ><button class="publicar">Publicar</button></a
+        >
+        {% else %}
+        <a href="{{url_for('publicar')}}"
+          ><button class="publicar ini">Publicar</button></a
+        >
+        {% endif %}
+        <div id="perfil" class="circulo">
+          <svg
+            style="enable-background: new 0 0 24 24"
+            version="1.1"
+            viewBox="0 0 24 24"
+            xml:space="preserve"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <g id="info" />
+            <g id="icons">
+              <g id="user">
+                <ellipse cx="12" cy="8" rx="5" ry="6" fill="currentColor" />
+                <path
+                  d="M21.8,19.1c-0.9-1.8-2.6-3.3-4.8-4.2c-0.6-0.2-1.3-0.2-1.8,0.1c-1,0.6-2,0.9-3.2,0.9s-2.2-0.3-3.2-0.9    C8.3,14.8,7.6,14.7,7,15c-2.2,0.9-3.9,2.4-4.8,4.2C1.5,20.5,2.6,22,4.1,22h15.8C21.4,22,22.5,20.5,21.8,19.1z"
+                  fill="currentColor"
+                />
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div id="menu-perfil" class="menu-perfil oculto">
+          <p id="nombre-completo"><b>{{apellido}}, {{nombre}}</b></p>
+          <p id="identificador">Identificador: {{id_usuario}}</p>
+          <hr />
+          <a href=""><button class="btn-menu">Mi Cuenta</button></a>
+          <a href=""><button class="btn-menu">Ajustes</button></a>
+          <a href=""><button class="btn-menu">Podemos Ayudarte?</button></a>
+          <a href="{{url_for('cerrar_sesion')}}"
+            ><button class="btn-menu">Cerrar Sesión</button></a
+          >
+        </div>
+
+        {% else %}
+        <a href="{{url_for('iniciar_sesion')}}"
+          ><button class="publicar">Publicar</button></a
+        >
+        <a href="{{url_for('iniciar_sesion')}}"
+          ><button class="iniciar-sesion">Iniciar Sesión</button></a
+        >
+        {% endif %}
+      </div>
+    </header>
+
+    <section>
+      <div class="buscador">
+        <div class="img-prop" id="img-prop"></div>
+        <h1 style="cursor: default">ENCONTRÁ TU CASA ONLINE</h1>
+        <div class="form-container">
+          <form action="{{url_for('publicaciones')}}" method="GET">
+            <input
+              type="hidden"
+              name="tipo_operacion[]"
+              id="seleccionOperacion"
+              value="Alquiler"
+            />
+            <div class="container-btn-alq-com">
+              <button
+                type="button"
+                class="boton-operacion"
+                id="operacion-alquilar"
+              >
+                Alquilar
+              </button>
+              <button
+                type="button"
+                class="boton-operacion"
+                id="operacion-comprar"
+              >
+                Comprar
+              </button>
+            </div>
+            <div class="button-container" id="container-button">
+              <button type="button" id="selector">Departamento</button>
+              <i
+                ><svg
+                  class="feather feather-chevron-right"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline points="9 18 15 12 9 6" /></svg
+              ></i>
+            </div>
+            <div id="opciones" class="opciones oculto">
+              <div class="opcion">Departamento</div>
+              <div class="opcion">Casa</div>
+              <div class="opcion">PH</div>
+              <div class="opcion">Quinta</div>
+              <div class="opcion">Garage</div>
+              <div class="opcion">Depósito</div>
+              <div class="opcion">Oficina Comercial</div>
+              <div class="opcion">Local Comercial</div>
+              <div class="opcion">Bodéga / Galpón</div>
+              <div class="opcion">Terreno / Lote</div>
+              <div class="opcion">Campo</div>
+            </div>
+            <input
+              type="hidden"
+              name="tipo_propiedad[]"
+              id="inputSeleccion"
+              value="Departamento"
+            />
+            <input
+              type="text"
+              name="barrio"
+              id="entrada"
+              placeholder="Ingresa una ubicación"
+            />
+            <div id="sugerencias" class="sugerencias-box"></div>
+            <button class="button" type="submit">Buscar</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="recomendaciones" id="recomendaciones">
+      <h2 class="popular-title">Nuestras recomendaciones para vos</h2>
+
+      <button
+        class="card-arrow left"
+        onclick="document.querySelector('.card-container').scrollBy({left: -320, behavior: 'smooth'})"
+      >
+        &#10094;
+      </button>
+      <div class="card-carousel-wrapper">
+        <div class="card-container">
+          {% for item in lista_propiedades[::-1] %}
+          <div class="card">
+            <div class="favorito" id="favorito">
+              <svg
+                id="corazon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="23"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 3H19C19.55 3 20 3.45 20 4V21L12 17L4 21V4C4 3.45 4.45 3 5 3Z"
+                  fill="currentColor"
+                  stroke="black"
+                  stroke-width="1"
+                />
+              </svg>
+            </div>
+            <a href="{{url_for('propiedad',id=item[0])}}">
+              <img
+                src="{{url_for('static',filename='/Imagenes/'+ item[25].split(',')[0])}}"
+                alt="Casa 1"
+              />
+              <div class="card-content">
+                <p
+                  style="
+                    font-size: 12px;
+                    color: rgb(109, 107, 107);
+                    font-family: inter;
+                  "
+                >
+                  {{item[4]}} &bull; {{item[5]}}
+                </p>
+                <h2
+                  class="precio"
+                  style="font-size: 18px; color: black; font-family: tango"
+                >
+                  {% if item[21]=="$"%}
+                  <span
+                    style="
+                      font-family: inter;
+                      font-size: 18px;
+                      font-weight: 900;
+                      color: #000000;
+                    "
+                    >{{item[21]}}</span
+                  >
+                  {%endif%} {% if item[21]=="USD"%} {{item[21]}} {%endif%}
+                  {{item[22]}}
+                </h2>
+                {%if item[23]%}
+                <p class="expensas"><b>Expensas $ {{item[23]}}</b></p>
+                {%endif%}
+                <p class="direccion"><b>{{item[6]}}</b></p>
+                <p class="barrio">{{item[8]}}, {{item[7]}}</p>
+              </div>
+              <div class="informacion-propiedad">
+                <div>{{item[16]}} m² tot.</div>
+                <div>{{item[11]}} Dorm.</div>
+                <div>{{item[12]}} Baño</div>
+              </div>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <button
+        class="card-arrow right"
+        onclick="document.querySelector('.card-container').scrollBy({left: 320, behavior: 'smooth'})"
+      >
+        &#10095;
+      </button>
+    </section>
+    <section class="eleginos" id="eleginos">
+      <div class="info">
+        <h2>Por qué elegir <i>TuCasaOnline</i> ?</h2>
+        <div class="eleginos-container">
+          <div class="carta-elegirnos">
+            <div class="img">
+              <svg
+                height="30"
+                id="svg2"
+                version="1.1"
+                viewBox="0 0 32 32.000001"
+                width="30"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:cc="http://creativecommons.org/ns#"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                xmlns:svg="http://www.w3.org/2000/svg"
+              >
+                <defs id="defs4" />
+                <g id="layer1" transform="translate(0,-1020.3622)">
+                  <path
+                    d="m 8.5000005,1030.1122 1.9999995,1 2.000001,0"
+                    id="path13545"
+                    style="
+                      fill: none;
+                      fill-rule: evenodd;
+                      stroke: #000000;
+                      stroke-width: 1px;
+                      stroke-linecap: butt;
+                      stroke-linejoin: miter;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 22.000001,1030.6122 -0.652082,0.326 a 1,1 0 0 1 -0.721935,0.067 l -2.856651,-0.8161 a 2,2 0 0 0 -0.549442,-0.077 l -3.149523,0 a 2,2 0 0 0 -1.6641,0.8906 L 10,1034.6122 l 2.464817,0 a 1,1 0 0 0 0.832051,-0.4453 l 0.406266,-0.6094 a 1,1 0 0 1 0.832051,-0.4453 l 0.66204,0 a 1,1 0 0 1 0.554701,0.1679 l 7.648627,5.0991 a 1.25,1.25 0 0 1 0.306625,1.7901 l -0.03076,0.041 a 1.25,1.25 0 0 1 -1.643119,0.3219 l -4.033297,-2.42"
+                    id="path13547"
+                    style="
+                      fill: none;
+                      fill-rule: evenodd;
+                      stroke: #000000;
+                      stroke-width: 1.00157475;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 23.500001,1038.1122 2,-2.5"
+                    id="path13549"
+                    style="
+                      fill: none;
+                      fill-rule: evenodd;
+                      stroke: #000000;
+                      stroke-width: 1px;
+                      stroke-linecap: butt;
+                      stroke-linejoin: miter;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 7.0000003,1038.1122 -2,-2"
+                    id="path13551"
+                    style="
+                      fill: none;
+                      fill-rule: evenodd;
+                      stroke: #000000;
+                      stroke-width: 1px;
+                      stroke-linecap: butt;
+                      stroke-linejoin: miter;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 9.9961731,1028.1182 -5.9936738,9.494 -3.49631035,-1.9987"
+                    id="path13553"
+                    style="
+                      fill: none;
+                      fill-rule: evenodd;
+                      stroke: #000000;
+                      stroke-width: 1px;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 11.005794,1037.7693 0.05314,0.035 c 0.455448,0.2979 0.580747,0.9041 0.280938,1.3591 l -1.9822606,3.0084 c -0.2998035,0.455 -0.907823,0.5814 -1.3632705,0.2835 l -0.053139,-0.035 c -0.4554475,-0.298 -0.5807465,-0.9041 -0.2809431,-1.3591 l 1.9822605,-3.0084 c 0.299809,-0.455 0.9078287,-0.5815 1.3632757,-0.2835 z"
+                    id="rect13555"
+                    style="
+                      opacity: 1;
+                      fill: none;
+                      fill-opacity: 1;
+                      stroke: #000000;
+                      stroke-width: 1.0000025;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 12.15215,1039.7235 c 0.463563,0.3033 0.592531,0.9207 0.289168,1.3843 l -1.368919,2.0919 c -0.303363,0.4635 -0.920781,0.5925 -1.3843433,0.2892 -0.4635626,-0.3034 -0.592531,-0.9208 -0.2891681,-1.3844 l 1.3689194,-2.0918 c 0.303363,-0.4636 0.920781,-0.5926 1.384343,-0.2892 z"
+                    id="rect13557"
+                    style="
+                      opacity: 1;
+                      fill: none;
+                      fill-opacity: 1;
+                      stroke: #000000;
+                      stroke-width: 1;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 13.485701,1041.2686 c 0.465013,0.3011 0.597651,0.9183 0.297389,1.3839 l -0.890987,1.3816 c -0.300262,0.4656 -0.916345,0.598 -1.381358,0.2968 -0.465012,-0.3011 -0.597642,-0.9183 -0.29738,-1.3839 l 0.890987,-1.3816 c 0.300262,-0.4656 0.916337,-0.598 1.381349,-0.2968 z"
+                    id="rect13559"
+                    style="
+                      opacity: 1;
+                      fill: none;
+                      fill-opacity: 1;
+                      stroke: #000000;
+                      stroke-width: 1.00000095;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 8.6464572,1037.7552 c 0.4650128,0.3011 0.5976451,0.9183 0.2973886,1.3839 l -0.8909922,1.3816 c -0.3002565,0.4656 -0.9163451,0.598 -1.381358,0.2968 -0.4650128,-0.3011 -0.5976367,-0.9183 -0.2973802,-1.3839 l 0.8909922,-1.3816 c 0.3002565,-0.4656 0.9163367,-0.598 1.3813496,-0.2968 z"
+                    id="rect13561"
+                    style="
+                      opacity: 1;
+                      fill: none;
+                      fill-opacity: 1;
+                      stroke: #000000;
+                      stroke-width: 1.00000095;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 21.003825,1028.1182 5.993672,9.494 3.49631,-1.9987"
+                    id="path13563"
+                    style="
+                      fill: none;
+                      fill-rule: evenodd;
+                      stroke: #000000;
+                      stroke-width: 1px;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 22.251409,1040.8884 -0.42927,0.5913 a 1.5,1.5 0 0 1 -2.008861,0.3908 l -2.813277,-1.7583"
+                    id="path13565"
+                    style="
+                      fill: none;
+                      fill-rule: evenodd;
+                      stroke: #000000;
+                      stroke-width: 1.00157475;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 20.765166,1042.3691 -0.442739,0.61 a 1.561214,1.561214 0 0 1 -2.038066,0.4384 l -2.28436,-1.3053"
+                    id="path13567"
+                    style="
+                      fill: none;
+                      fill-rule: evenodd;
+                      stroke: #000000;
+                      stroke-width: 1.00157475;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 18.407481,1043.635 -0.438392,0.67 a 1.2312126,1.2312126 0 0 1 -1.469687,0.476 l -2.999401,-1.146"
+                    id="path13569"
+                    style="
+                      fill: none;
+                      fill-rule: evenodd;
+                      stroke: #000000;
+                      stroke-width: 1.00157475;
+                      stroke-linecap: butt;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 3.5000002,1034.6122 a 0.5,0.5 0 0 1 -0.5,0.5 0.5,0.5 0 0 1 -0.5,-0.5 0.5,0.5 0 0 1 0.5,-0.5 0.5,0.5 0 0 1 0.5,0.5 z"
+                    id="circle13571"
+                    style="
+                      opacity: 1;
+                      fill: #000000;
+                      fill-opacity: 1;
+                      stroke: none;
+                      stroke-width: 1;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                  <path
+                    d="m 28.499996,1034.6122 a 0.5,0.5 0 0 1 -0.5,0.5 0.5,0.5 0 0 1 -0.5,-0.5 0.5,0.5 0 0 1 0.5,-0.5 0.5,0.5 0 0 1 0.5,0.5 z"
+                    id="circle13573"
+                    style="
+                      opacity: 1;
+                      fill: #000000;
+                      fill-opacity: 1;
+                      stroke: none;
+                      stroke-width: 1;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                      stroke-miterlimit: 4;
+                      stroke-dasharray: none;
+                      stroke-opacity: 1;
+                    "
+                  />
+                </g>
+              </svg>
+            </div>
+            <h3>Asesoramiento personalizado</h3>
+            <p>
+              Te acompañamos en cada paso del proceso, resolviendo tus dudas y
+              ofreciéndote las mejores opciones según tus preferencias.
+            </p>
+          </div>
+          <div class="carta-elegirnos">
+            <div class="img">
+              <svg
+                width="30"
+                height="30"
+                viewBox="1170 120 340 340"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g>
+                  <path
+                    d="M 1434.99,257.573 C 1434.99,328.699 1377.39,386.357 1306.34,386.357 C 1235.28,386.357 1177.68,328.699 1177.68,257.573 C 1177.68,186.447 1235.28,128.788 1306.34,128.788 C 1377.39,128.788 1434.99,186.447 1434.99,257.573 Z"
+                    fill="none"
+                    stroke="black"
+                    stroke-width="14"
+                  />
+                  <path
+                    d="M 1243.38,306.464 L 1243.66,228.863 L 1308.69,186.681 L 1369.29,228.863 L 1369.29,306.464"
+                    fill="none"
+                    stroke="black"
+                    stroke-width="14"
+                  />
+                  <path
+                    d="M 1275.66,306.465 L 1275.66,260.863 C 1275.66,260.863 1304.99,260.863 1304.99,260.863 C 1304.99,260.863 1304.99,306.465 1304.99,306.465"
+                    fill="none"
+                    stroke="black"
+                    stroke-width="14"
+                  />
+                  <path
+                    d="M 1409.09,339.645 L 1501.1,422.936"
+                    fill="none"
+                    stroke="black"
+                    stroke-width="14"
+                  />
+                </g>
+              </svg>
+            </div>
+            <h3>Variedad de propiedades</h3>
+            <p>
+              Contamos con casas, departamentos, terrenos y locales en
+              diferentes zonas para que elijas con total libertad.
+            </p>
+          </div>
+          <div class="carta-elegirnos">
+            <div class="img">
+              <svg
+                id="Layer_1"
+                height="30"
+                width="30"
+                style="enable-background: new 0 0 100.4 100.4"
+                version="1.1"
+                viewBox="0 0 100.4 100.4"
+                xml:space="preserve"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <g>
+                  <path
+                    d="M56.6,16.5v-4.4h4.1c0.8,0,1.5-0.7,1.5-1.5V3.4c0-0.8-0.7-1.5-1.5-1.5H43.2c-0.8,0-1.5,0.7-1.5,1.5v7.2   c0,0.8,0.7,1.5,1.5,1.5h4.1v4.4c-9.7,1.1-18.3,5.6-24.8,12.2L20.8,27l2.8-2.8c0.6-0.6,0.6-1.5,0-2.1l-5.8-5.8   c-0.6-0.6-1.5-0.6-2.1,0L7.8,24c-0.6,0.6-0.6,1.5,0,2.1l5.8,5.8c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l2.9-2.9l1.9,1.9   C14.6,38,11,47.2,11,57.2c0,22.6,18.4,41,41,41s41-18.4,41-41C92.9,36.2,77,18.8,56.6,16.5z M14.7,28.8L11,25l5.6-5.6l3.7,3.7   l-2.2,2.2c-0.3,0.3-0.7,0.7-1.1,1.1L14.7,28.8z M48.8,9.1h-4.1V4.9h14.5v4.2h-4.1c-0.8,0-1.5,0.7-1.5,1.5v5.7c-0.5,0-1.1,0-1.6,0   s-1.1,0-1.6,0v-5.7C50.3,9.7,49.6,9.1,48.8,9.1z M51.9,95.2c-20.9,0-38-17-38-38s17-38,38-38c0.8,0,1.6,0,2.4,0.1   c0.4,0,0.8,0.1,1.2,0.1c19.3,1.8,34.4,18.1,34.4,37.8C89.9,78.2,72.9,95.2,51.9,95.2z"
+                  />
+                  <path
+                    d="M73.5,32.6c-0.1-0.1-0.2-0.2-0.3-0.3c-5.7-4.9-13.1-7.8-21.2-7.8c-18.1,0-32.7,14.7-32.7,32.7S33.9,90,51.9,90   s32.7-14.7,32.7-32.7C84.7,47.4,80.3,38.6,73.5,32.6z M51.9,87c-16.4,0-29.7-13.3-29.7-29.7s13.3-29.7,29.7-29.7   c6.9,0,13.2,2.4,18.2,6.3L53.9,52.5c-0.6-0.2-1.3-0.4-1.9-0.4c-2.8,0-5.1,2.3-5.1,5.1s2.3,5.1,5.1,5.1s5-2.3,5-5.1   c0-1-0.3-2-0.8-2.8l16.3-18.7c5.7,5.4,9.2,13,9.2,21.5C81.7,73.6,68.3,87,51.9,87z M54,57.2c0,1.2-0.9,2.1-2.1,2.1   s-2.1-0.9-2.1-2.1c0-1.1,0.9-2.1,2.1-2.1S54,56.1,54,57.2z"
+                  />
+                </g>
+              </svg>
+            </div>
+            <h3>Atención rápida y eficiente</h3>
+            <p>
+              Sabemos que tu tiempo vale. Por eso respondemos tus consultas lo
+              antes posible y agilizamos cada trámite.
+            </p>
+          </div>
+          <div class="carta-elegirnos">
+            <div class="img">
+              <svg
+                height="30"
+                viewBox="0 0 48 48"
+                width="30"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M24 4c-7.73 0-14 6.27-14 14 0 10.5 14 26 14 26s14-15.5 14-26c0-7.73-6.27-14-14-14zm0 19c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
+                />
+                <path d="M0 0h48v48h-48z" fill="none" />
+              </svg>
+            </div>
+            <h3>Conocemos tu zona</h3>
+            <p>
+              Trabajamos con agentes que viven y conocen el área, para ofrecerte
+              recomendaciones reales y acertadas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <h2><i>Preguntas Frecuentes</i></h2>
+      <div class="faq-container">
+        <div>
+          <details>
+            <summary>
+              <strong>¿Cómo puedo agendar una visita a una propiedad?</strong>
+            </summary>
+            <p>
+              Podés contactarnos por WhatsApp, correo o desde el formulario en
+              la ficha de la propiedad. Coordinamos una visita en el horario que
+              mejor te quede.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              <strong>¿Las propiedades están actualizadas?</strong>
+            </summary>
+            <p>
+              Sí, mantenemos nuestras publicaciones actualizadas en tiempo real.
+              Si aparece publicada, está disponible.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              <strong>¿Qué documentos necesito para alquilar?</strong>
+            </summary>
+            <p>
+              Generalmente se requiere DNI, comprobante de ingresos y garantía.
+              Te asesoramos según cada caso.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              <strong>¿Puedo publicar mi propiedad con ustedes?</strong>
+            </summary>
+            <p>
+              ¡Sí! Contactanos y te contamos cómo hacerlo. Nos encargamos de
+              todo: fotos, publicación y promoción.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              <strong>¿Dónde están ubicadas las propiedades?</strong>
+            </summary>
+            <p>
+              Trabajamos principalmente en tu zona, pero tenemos opciones en
+              distintas áreas. Usá el buscador para filtrar por ubicación.
+            </p>
+          </details>
+        </div>
+        <div>
+          <details>
+            <summary>
+              <strong>¿Puedo reservar una propiedad desde la web?</strong>
+            </summary>
+            <p>
+              Sí, algunas propiedades permiten reserva online. Una vez que
+              completás el formulario, uno de nuestros agentes te contacta para
+              confirmar.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              <strong
+                >¿Cuál es la diferencia entre alquilar y alquilar con opción a
+                compra?</strong
+              >
+            </summary>
+            <p>
+              Alquilar con opción a compra te permite descontar parte del
+              alquiler si luego decidís comprar la propiedad. Consultá si está
+              disponible en la propiedad que te interesa.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              <strong
+                >¿Cuánto tiempo tarda el proceso de compra o alquiler?</strong
+              >
+            </summary>
+            <p>
+              Varía según cada caso, pero en promedio: alquiler (1 a 2 semanas),
+              compra (30 a 60 días). Nuestro equipo te guía en cada paso para
+              agilizarlo.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              <strong>¿Qué pasa si no tengo garantía propietaria?</strong>
+            </summary>
+            <p>
+              Tenemos opciones con seguros de caución o garantes con recibo de
+              sueldo. ¡Consultanos y te ayudamos a encontrar la mejor
+              alternativa!
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              <strong>¿Cómo sé si una propiedad está en buen estado?</strong>
+            </summary>
+            <p>
+              Visitamos y evaluamos cada propiedad antes de publicarla. Además,
+              podés pedir una visita o inspección técnica con un profesional.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+    <section class="contactate-con-nosotros" id="contactate-con-nosotros">
+      <div class="contact-text">
+        <h2>¿Tenés dudas o querés agendar una visita?</h2>
+        <p>
+          Completá el formulario y nos contactamos con vos lo antes posible.
+          Estamos para ayudarte a encontrar tu próximo hogar.
+        </p>
+      </div>
+
+      <form action="{{url_for('ayuda')}}" method="POST">
+        <h2>Contactate con Nosotros</h2>
+        <input
+          type="text"
+          name="nombre-cont"
+          id="nombre-cont"
+          placeholder="Nombre"
+          required
+        />
+        <input
+          type="text"
+          name="apellido-cont"
+          id="apellido-cont"
+          placeholder="Apellido"
+          required
+        />
+        <textarea
+          name="text-cont"
+          id="text-cont"
+          placeholder="Escribí tu mensaje..."
+          minlength="10"
+          required
+        ></textarea>
+        <button type="submit">Enviar Mensaje</button>
+      </form>
+    </section>
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <h4>TuCasaOnline</h4>
+          <p>Conectando personas con hogares. Tu lugar ideal está a un clic.</p>
+        </div>
+
+        <div class="footer-links">
+          <h4>Enlaces útiles</h4>
+          <a href="#inicio">Inicio</a>
+          <a href="#recomendaciones">Propiedades</a>
+          <a href="#eleginos">Sobre Nosotros</a>
+          <a href="#contactate-con-nosotros">Contacto</a>
+          <a href="#faq">Preguntas Frecuentes</a>
+        </div>
+
+        <div class="footer-contact">
+          <h4>Contacto</h4>
+          <p>📍 Buenos Aires, Argentina</p>
+          <p>📞 +54 9 11 2345-6789</p>
+          <p>✉️ tucasaonlineinmobiliaria@gmail.com</p>
+        </div>
+
+        <div class="footer-social">
+          <h4>Seguinos</h4>
+          <a href="#"
+            ><div>
+              <svg
+                enable-background="new 0 0 56.693 56.693"
+                height="56.693px"
+                id="Layer_1"
+                version="1.1"
+                viewBox="0 0 56.693 56.693"
+                width="56.693px"
+                xml:space="preserve"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <path
+                  d="M40.43,21.739h-7.645v-5.014c0-1.883,1.248-2.322,2.127-2.322c0.877,0,5.395,0,5.395,0V6.125l-7.43-0.029  c-8.248,0-10.125,6.174-10.125,10.125v5.518h-4.77v8.53h4.77c0,10.947,0,24.137,0,24.137h10.033c0,0,0-13.32,0-24.137h6.77  L40.43,21.739z"
+                  fill="currentColor"
+                />
+              </svg></div
+          ></a>
+          <a href="#"
+            ><div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1200"
+                height="1227"
+                viewBox="0 0 1200 1227"
+                fill="none"
+              >
+                <g clip-path="url(#clip0_1_2)">
+                  <path
+                    d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"
+                    fill="currentColor"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_1_2">
+                    <rect width="1200" height="1227" fill="currentColor" />
+                  </clipPath>
+                </defs>
+              </svg></div
+          ></a>
+          <a href="#"
+            ><div>
+              <svg
+                height="56.693px"
+                id="Layer_1"
+                style="enable-background: new 0 0 56.693 56.693"
+                version="1.1"
+                viewBox="0 0 56.693 56.693"
+                width="56.693px"
+                xml:space="preserve"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <style type="text/css"></style>
+                <g>
+                  <path
+                    class="st0"
+                    d="M46.3802,10.7138c-4.6512-4.6565-10.8365-7.222-17.4266-7.2247c-13.5785,0-24.63,11.0506-24.6353,24.6333   c-0.0019,4.342,1.1325,8.58,3.2884,12.3159l-3.495,12.7657l13.0595-3.4257c3.5982,1.9626,7.6495,2.9971,11.7726,2.9985h0.01   c0.0008,0-0.0006,0,0.0002,0c13.5771,0,24.6293-11.0517,24.635-24.6347C53.5914,21.5595,51.0313,15.3701,46.3802,10.7138z    M28.9537,48.6163h-0.0083c-3.674-0.0014-7.2777-0.9886-10.4215-2.8541l-0.7476-0.4437l-7.7497,2.0328l2.0686-7.5558   l-0.4869-0.7748c-2.0496-3.26-3.1321-7.028-3.1305-10.8969c0.0044-11.2894,9.19-20.474,20.4842-20.474   c5.469,0.0017,10.6101,2.1344,14.476,6.0047c3.8658,3.8703,5.9936,9.0148,5.9914,14.4859   C49.4248,39.4307,40.2395,48.6163,28.9537,48.6163z"
+                    fill="currentColor"
+                  />
+                  <path
+                    class="st0"
+                    d="M40.1851,33.281c-0.6155-0.3081-3.6419-1.797-4.2061-2.0026c-0.5642-0.2054-0.9746-0.3081-1.3849,0.3081   c-0.4103,0.6161-1.59,2.0027-1.9491,2.4136c-0.359,0.4106-0.7182,0.4623-1.3336,0.1539c-0.6155-0.3081-2.5989-0.958-4.95-3.0551   c-1.83-1.6323-3.0653-3.6479-3.4245-4.2643c-0.359-0.6161-0.0382-0.9492,0.27-1.2562c0.2769-0.2759,0.6156-0.7189,0.9234-1.0784   c0.3077-0.3593,0.4103-0.6163,0.6155-1.0268c0.2052-0.4109,0.1027-0.7704-0.0513-1.0784   c-0.1539-0.3081-1.3849-3.3379-1.8978-4.5706c-0.4998-1.2001-1.0072-1.0375-1.3851-1.0566   c-0.3585-0.0179-0.7694-0.0216-1.1797-0.0216s-1.0773,0.1541-1.6414,0.7702c-0.5642,0.6163-2.1545,2.1056-2.1545,5.1351   c0,3.0299,2.2057,5.9569,2.5135,6.3676c0.3077,0.411,4.3405,6.6282,10.5153,9.2945c1.4686,0.6343,2.6152,1.013,3.5091,1.2966   c1.4746,0.4686,2.8165,0.4024,3.8771,0.2439c1.1827-0.1767,3.6419-1.489,4.1548-2.9267c0.513-1.438,0.513-2.6706,0.359-2.9272   C41.211,33.7433,40.8006,33.5892,40.1851,33.281z"
+                    fill="currentColor"
+                  />
+                </g>
+              </svg></div
+          ></a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p style="cursor: default; font-size: 14px">
+          &copy;2025 Gastón Laginestra - Todos los derechos reservados.
+        </p>
+      </div>
+    </footer>
+
+    <script src="{{url_for('static',filename='/JS/home.js')}}"></script>
+  </body>
+</html>

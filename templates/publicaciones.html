@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename= '/CSS/publicaciones.css' )}}"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <title>TuCasaOnline-Publicaciones</title>
+  </head>
+  <body>
+    <header class="header">
+      <a href="{{url_for('home')}}"><div class="logo"></div></a>
+      <div class="header-container">
+        {% if session.usuario %} {% if usuario_incompleto %}
+        <a href="{{ url_for('completar_datos') }}"
+          ><button class="publicar">Publicar</button></a
+        >
+        {% else %}
+        <a href="{{url_for('publicar')}}"
+          ><button class="publicar ini">Publicar</button></a
+        >
+        {% endif %}
+        <div id="perfil" class="circulo">
+          <svg
+            style="enable-background: new 0 0 24 24"
+            version="1.1"
+            viewBox="0 0 24 24"
+            xml:space="preserve"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <g id="info" />
+            <g id="icons">
+              <g id="user">
+                <ellipse cx="12" cy="8" rx="5" ry="6" fill="currentColor" />
+                <path
+                  d="M21.8,19.1c-0.9-1.8-2.6-3.3-4.8-4.2c-0.6-0.2-1.3-0.2-1.8,0.1c-1,0.6-2,0.9-3.2,0.9s-2.2-0.3-3.2-0.9    C8.3,14.8,7.6,14.7,7,15c-2.2,0.9-3.9,2.4-4.8,4.2C1.5,20.5,2.6,22,4.1,22h15.8C21.4,22,22.5,20.5,21.8,19.1z"
+                  fill="currentColor"
+                />
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div id="menu-perfil" class="menu-perfil oculto">
+          <p id="nombre-completo"><b>{{apellido}}, {{nombre}}</b></p>
+          <p id="identificador">Identificador: {{id_usuario}}</p>
+          <hr />
+          <a href=""><button class="btn-menu">Mi Cuenta</button></a>
+          <a href=""><button class="btn-menu">Ajustes</button></a>
+          <a href=""><button class="btn-menu">Podemos Ayudarte?</button></a>
+          <a href="{{url_for('cerrar_sesion')}}"
+            ><button class="btn-menu">Cerrar Sesión</button></a
+          >
+        </div>
+
+        {% else %}
+        <a href="{{url_for('iniciar_sesion')}}"
+          ><button class="publicar">Publicar</button></a
+        >
+        <a href="{{url_for('iniciar_sesion')}}"
+          ><button class="iniciar-sesion">Iniciar Sesión</button></a
+        >
+        {% endif %}
+      </div>
+    </header>
+
+    <section class="container-publi-comod">
+      <div class="container-comodidades" id="container-comodidades">
+        <form action="{{url_for('publicaciones')}}" method="GET">
+          <div class="container-barrio">
+            <input
+              type="text"
+              name="barrio"
+              id="barrio"
+              class="button barrio"
+              value="{{barrio or ''}}"
+            />
+            <svg
+              enable-background="new 0 0 32 32"
+              id="Editable-line"
+              version="1.1"
+              viewBox="0 0 32 32"
+              xml:space="preserve"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
+              <circle
+                cx="14"
+                cy="14"
+                fill="none"
+                id="XMLID_42_"
+                r="9"
+                stroke="#000000"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-miterlimit="10"
+                stroke-width="2"
+              />
+              <line
+                fill="none"
+                id="XMLID_44_"
+                stroke="#000000"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-miterlimit="10"
+                stroke-width="2"
+                x1="27"
+                x2="20.366"
+                y1="27"
+                y2="20.366"
+              />
+            </svg>
+          </div>
+          <div id="sugerencias" class="sugerencias-box"></div>
+          <div class="container-comprar" id="comprar">
+            <button class="button comprar" type="button">Comprar</button>
+            <svg
+              id="flecha-comprar"
+              class="feather feather-chevron-down"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="menu-comprar oculto" id="menu-comprar">
+            <p>Tipo de operación</p>
+            <label class="input-comprar"
+              ><input type="checkbox" name="tipo_operacion[]" value="Alquilar"
+              class="ckeckbox-comprar" {%if 'Alquiler' in tipo_operacion %}
+              checked {%endif%}> Alquilar</label
+            >
+            <label class="input-comprar"
+              ><input type="checkbox" name="tipo_operacion[]" value="Comprar"
+              class="ckeckbox-comprar" {%if 'Venta' in tipo_operacion %} checked
+              {%endif%}>Comprar</label
+            >
+            <!-- <label class="input-comprar"><input type="checkbox" name="tipo_operacion[]" value="Temporal" class="ckeckbox-comprar" {%if 'Temporal' in tipo_operacion %} checked {%endif%}>Temporal</label>
+                    <label class="input-comprar"><input type="checkbox" name="tipo_operacion[]" value="Emprendimientos" class="ckeckbox-comprar" {%if 'Emprendimientos' in tipo_operacion %} checked {%endif%}>Emprendimientos</label> -->
+          </div>
+
+          <div class="container-comprar" id="departamento">
+            <button class="button depa" type="button">Departamento</button>
+            <svg
+              id="flecha-departamento"
+              class="feather feather-chevron-down"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="menu-departamento oculto" id="menu-departamento">
+            <p>Tipo de propiedad</p>
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]"
+              value="Departamento" class="ckeckbox-departamento" {% if
+              'Departamento' in tipo_propiedad %} checked {% endif %}>
+              Departamento</label
+            >
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]" value="Casa"
+              class="ckeckbox-departamento" {% if 'Casa' in tipo_propiedad %}
+              checked {% endif %}> Casa</label
+            >
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]" value="PH"
+              class="ckeckbox-departamento" {% if 'PH' in tipo_propiedad %}
+              checked {% endif %}> PH</label
+            >
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]" value="Quinta"
+              class="ckeckbox-departamento" {% if 'Quinta' in tipo_propiedad %}
+              checked {% endif %}> Quinta</label
+            >
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]" value="Garage"
+              class="ckeckbox-departamento" {% if 'Garage' in tipo_propiedad %}
+              checked {% endif %}> Garage</label
+            >
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]" value="Depósito"
+              class="ckeckbox-departamento" {% if 'Depósito' in tipo_propiedad
+              %} checked {% endif %}> Depósito</label
+            >
+            <label class="input-departamento">
+              <input type="checkbox" name="tipo_propiedad[]" value="Oficina
+              Comercial" class="ckeckbox-departamento" {% if 'Oficina Comercial'
+              in tipo_propiedad %} checked {% endif %}> Oficina Comercial</label
+            >
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]" value="Local
+              Comercial" class="ckeckbox-departamento" {% if 'Local Comercial'
+              in tipo_propiedad %} checked {% endif %}> Local Comercial</label
+            >
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]" value="Bodéga /
+              Galpón" class="ckeckbox-departamento" {% if 'Bodéga / Galpón' in
+              tipo_propiedad %} checked {% endif %}> Bodéga / Galpón</label
+            >
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]" value="Terreno /
+              Lote" class="ckeckbox-departamento" {% if 'Terreno / Lote' in
+              tipo_propiedad %} checked {% endif %}> Terreno / Lote</label
+            >
+            <label class="input-departamento"
+              ><input type="checkbox" name="tipo_propiedad[]" value="Campo"
+              class="ckeckbox-departamento" {% if 'Campo' in tipo_propiedad %}
+              checked {% endif %}> Campo</label
+            >
+            <label class="input-departamento"
+              ><input type="hidden" name="tipo_propiedad[]" value="Todos"
+              class="ckeckbox-departamento" {% if 'Todos' in tipo_propiedad %}
+              checked {% endif %}> Todos</label
+            >
+          </div>
+
+          <div class="container-comprar" id="amb">
+            <button class="button amb" type="button">Amb/Dom</button>
+            <svg
+              id="flecha-amb"
+              class="feather feather-chevron-down"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="menu-amb oculto" id="menu-amb">
+            <p>Dormitorios</p>
+            <div>
+              <input
+                type="number"
+                name="min-dorm"
+                id="min-dorm"
+                placeholder="Sin mínimo"
+                min="0"
+                value="{{min_dorm or ''}}"
+              />
+              <input
+                type="number"
+                name="max-dorm"
+                id="max-dorm"
+                placeholder="Sin máximo"
+                min="0"
+                value="{{max_dorm or ''}}"
+              />
+            </div>
+            <p style="margin-top: 15px">Ambientes</p>
+            <div>
+              <input
+                type="number"
+                name="min-amb"
+                id="min-amb"
+                placeholder="Sin mínimo"
+                min="0"
+                value="{{min_amb or ''}}"
+              />
+              <input
+                type="number"
+                name="max-amb"
+                id="max-amb"
+                placeholder="Sin máximo"
+                min="0"
+                value="{{max_amb or ''}}"
+              />
+            </div>
+          </div>
+
+          <div class="container-comprar" id="precio">
+            <button class="button precio" type="button">Precio</button>
+            <svg
+              id="flecha-precio"
+              class="feather feather-chevron-down"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="menu-precio oculto" id="menu-precio">
+            <p>Precio</p>
+            <div>
+              <input type="hidden" name="moneda" id="guardar-moneda" />
+              <label
+                ><input type="checkbox" name="peso" id="peso" {% if moneda=='$'
+                %}checked {%endif%}> $</label
+              >
+              <label
+                ><input type="checkbox" name="peso" id="dolar" {% if
+                moneda=='USD' %}checked {%endif%}> USD</label
+              >
+            </div>
+            <div class="menu-precio-inputs">
+              <input
+                type="number"
+                name="min-precio"
+                id="min-precio"
+                placeholder="Desde"
+                min="0"
+                {%
+                if
+                min_precio
+                %}value="{{min_precio}}"
+                {%endif%}
+              />
+              <input
+                type="number"
+                name="max-precio"
+                id="max-precio"
+                placeholder="Hasta"
+                min="0"
+                {%
+                if
+                max_precio
+                %}value="{{max_precio}}"
+                {%endif%}
+              />
+            </div>
+          </div>
+          <div class="container-comprar" id="filtro">
+            <button class="button filtro" type="button">Más Filtros</button>
+            <svg
+              id="flecha-filtro"
+              class="feather feather-chevron-down"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+
+          <button class="aplicar-filtro" type="submit">Aplicar Filtros</button>
+        </form>
+      </div>
+
+      <div class="container-publicaciones" id="container-publicaciones">
+        {% if propiedades %} {% for item in propiedades %}
+        <div class="card">
+          <div class="favorito" id="favorito">
+            <svg
+              id="corazon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="23"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 3H19C19.55 3 20 3.45 20 4V21L12 17L4 21V4C4 3.45 4.45 3 5 3Z"
+                fill="currentColor"
+                stroke="black"
+                stroke-width="1"
+              />
+            </svg>
+          </div>
+          <a
+            class="publicacion-propiedad"
+            href="{{url_for('propiedad',id=item[0])}}"
+          >
+            <img src="../static/Imagenes/{{item[24]}}" alt="Casa 1" />
+
+            <div class="container-card-info">
+              <h2>
+                <span
+                  style="
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-weight: bold;
+                    font-size: 23px;
+                  "
+                  >{{item[21]}}</span
+                >
+                {% if item[22] %} {{ "{:,.0f}".format(item[22]).replace(",",
+                ".") }} {% endif %}
+              </h2>
+              <p class="expensas">$ {{item[23]}} Expensas</p>
+              <p class="direccion"><b>{{item[6]}}</b></p>
+              <p class="barrio">{{item[8]}}, {{item[7]}}</p>
+              <div class="container-info">
+                <div>{{item[16]}} m² tot.</div>
+                {% if item[10] > 0 %}
+                <div>{{item[10]}} amb.</div>
+                {% endif %} {% if item[11] > 0 %}
+                <div>{{item[11]}} dorm.</div>
+                {% endif %} {% if item[12] > 1 %}
+                <div>{{item[12]}} baños</div>
+                {% else %} {% if item[12] > 0 %}
+                <div>{{item[12]}} baño</div>
+                {% endif %} {% endif %}
+              </div>
+              <p class="descripcion">{{item[3]}}</p>
+            </div>
+          </a>
+        </div>
+        {% endfor %} {% else %}
+        <h3>No se encontraron propiedades con esas características.</h3>
+        {%endif%}
+
+        <div class="paginador">
+          {% if pagina > 1 %}
+          <a href="{{ url_for('publicaciones', pagina=pagina-1) }}"
+            >« Anterior</a
+          >
+          {% endif %} {% for i in range(1, total_paginas + 1) %} {% if i ==
+          pagina %}
+          <strong>{{ i }}</strong>
+          {% else %}
+          <a href="{{ url_for('publicaciones', pagina=i) }}">{{ i }}</a>
+          {% endif %} {% endfor %} {% if pagina < total_paginas %}
+          <a href="{{ url_for('publicaciones', pagina=pagina+1) }}"
+            >Siguiente »</a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <script src="{{url_for('static',filename='/JS/publicaciones.js')}}"></script>
+  </body>
+</html>

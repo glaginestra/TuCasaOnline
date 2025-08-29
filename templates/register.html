@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='/CSS/login.css')}}">
+    <link rel="shortcut icon" href="{{url_for('static',filename='Imagenes/logof.png')}}" type="image/x-icon">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
+
+    <title>Registro</title>
+</head>
+<body>
+    <section id="register" class="register">
+        <div class="container-volver">
+            <a class="volver" href="{{url_for('iniciar_sesion')}}">&larr;</a>
+            <a class="h2" href="{{url_for('iniciar_sesion')}}"><h2>Volver</h2></a>
+        </div>
+        
+        <a class="close" href="{{url_for('home')}}">&times;</a>
+        <div class="bienvenido registro">
+            <h2>Ingresá los datos para poder crearte tu perfil profesional</h2>
+        </div>
+        <form action="{{url_for('registrarse')}}" method="POST" id="formulario">
+            <input type="text" name="nombre" id="nombre" placeholder="Nombre" required>
+            <input type="text" name="apellido" id="apellido" placeholder="Apellido" required>
+            <input type="email" name="email" id="email" placeholder="Email" required>
+            <input type="password" name="password" id="password" placeholder="Contraseña" required>
+            <input type="number" name="dni" id="dni" placeholder="DNI" required>
+            <input type="number" name="telefono" id="telefono" placeholder="Teléfono" required>
+            <button type="submit">Registrarme</button>
+        </form>
+
+        <div class="texto-registrate" style="margin-top: 5px;">
+            <p>¿Ya tenés una cuenta?</p>
+            <a id="boton" href="{{url_for('iniciar_sesion')}}">Inicia Sesión acá</a>
+        </div>
+    </section>
+    
+    <script src="{{url_for('static',filename='/JS/register.js')}}"></script>
+</body>
+</html>

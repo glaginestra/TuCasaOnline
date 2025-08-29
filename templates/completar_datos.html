@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='/CSS/login.css')}}">
+    <link rel="shortcut icon" href="{{url_for('static',filename='Imagenes/logof.png')}}" type="image/x-icon">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
+
+    <title>Datos Faltantes</title>
+</head>
+<body>
+    <section id="completar-datos" class="completar-datos">
+        <a class="close" href="{{url_for('home')}}">&times;</a>
+        <div class="bienvenido registro">
+            <h2>Completa los datos para poder terminar tu perfil profesional</h2>
+        </div>
+        <form action="{{url_for('completar_datos')}}" method="POST" id="formulario">
+            <input type="password" name="password" id="password" placeholder="Contraseña" required>
+            <input type="number" name="dni" id="dni" placeholder="DNI" required>
+            <input type="number" name="telefono" id="telefono" placeholder="Teléfono" required>
+            <button type="submit">Completar datos</button>
+        </form>
+    </section>
+    
+    <script src="{{url_for('static',filename='/JS/completar_datos.js')}}"></script>
+</body>
+</html>
