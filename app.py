@@ -13,12 +13,31 @@ import os
 import base64
 import json
 
+
 app = Flask(__name__)
-app.secret_key=b'\xb7\xf3\x12\xb5\x1f\x84\xf1o\x92\x13\xf5\xddo\xb9\xcb\x0e\xab\x0b\x1aC\xe4P\xc3t'
+app.secret_key = os.environ.get("SECRET_KEY", "clave_por_defecto_para_dev")
 
 UPLOAD_FOLDER = './uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
+def seed_db_if_empty():
+    conn, cursor = conectar()
+    
+    # Comprobar si ya hay usuarios cargados
+    cursor.execute("SELECT COUNT(*) as total FROM usuarios")
+    total = cursor.fetchone()["total"]
+    
+    if total == 0:
+        # Ejecuta tu script de seed
+        import seed_db
+    
+    conn.close()
+
+# Llamar a la función antes de correr la app
+seed_db_if_empty()
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
