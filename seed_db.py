@@ -44,7 +44,7 @@ for i in range(15):
             "Casa",
             "Humberto Primo 2000",
             "Buenos Aires",
-            "Palermo",
+            "San Cristóbal",
             "-34.62176894062619,-58.39377788220882",
             random.randint(2, 6),
             random.randint(1, 4),
