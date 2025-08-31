@@ -21,6 +21,8 @@ UPLOAD_FOLDER = './uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+EMAIL_USER = os.getenv("EMAIL_USER")
+EMAIL_PASS = os.getenv("EMAIL_PASS")
 
 def seed_db_if_empty():
     conn, cursor = conectar()
@@ -109,22 +111,12 @@ def construir_filtros(tipo_propiedad, barrio, tipo_operacion, min_dorm, max_dorm
     return where, params
 
 def pasar_numero_con_coma(nro):
-    if len(nro)==4:
-        nro=nro[0:1]+"."+nro[1:]
-    elif len(nro)==5:
-        nro=nro[0:2]+"."+nro[2:]
-    elif len(nro)==6:
-        nro=nro[0:3]+"."+nro[3:]
-    elif len(nro)==7:
-        nro=nro[0:1]+"."+nro[1:4]+"."+nro[4:]
-    elif len(nro)==8:
-        nro=nro[0:2]+"."+nro[2:5]+"."+nro[5:]
-    elif len(nro)==9:
-        nro=nro[0:3]+"."+nro[3:6]+"."+nro[6:]
-    elif len(nro)==10:
-        nro=nro[0:1]+"."+nro[1:4]+"."+nro[4:7]+"."+nro[7:]
-    return nro
-
+    try:
+        nro_int = int(float(nro))
+        return "{:,}".format(nro_int).replace(",", ".")
+    except:
+        return nro
+    
 def sacar_punto(nro):
     nro_normal=""
     for i in range(len(nro)):
@@ -337,7 +329,7 @@ def ayuda():
             msg.set_content(cuerpo)
 
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                smtp.login('tucasaonlineinmobiliaria@gmail.com', 'upme dxdq pytc kpbh')  # ⚠️ Usar contraseña de aplicación
+                smtp.login(EMAIL_USER, EMAIL_PASS)
                 smtp.send_message(msg)
 
             flash("Email enviado correctamente.", "success")
@@ -380,7 +372,7 @@ def contactar_anunciante():
             msg.set_content(cuerpo)
 
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                smtp.login('tucasaonlineinmobiliaria@gmail.com', 'upme dxdq pytc kpbh')  # ⚠️ Usar contraseña de aplicación
+                smtp.login(EMAIL_USER, EMAIL_PASS)
                 smtp.send_message(msg)
 
             flash("Email enviado correctamente.", "success")
@@ -669,4 +661,3 @@ if __name__ == '__main__':
     app.run(debug=True, port=9999)
 
     
-#1065663324875-j2aqv4d22tpksth987rncegsnat2d0s5.apps.googleusercontent.com
